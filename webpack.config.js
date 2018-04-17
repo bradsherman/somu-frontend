@@ -1,15 +1,18 @@
 const path = require('path');
 
 module.exports = {
+  mode: 'development',
   entry: ['./src/index.js'],
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   devServer: {
     contentBase: './dist',
     host: '0.0.0.0',
-    port: 3001
+    port: 3001,
+    historyApiFallback: true
   },
   module: {
     rules: [
