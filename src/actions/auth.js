@@ -13,18 +13,13 @@ export const userLoggedOut = () => ({
 export const login = credentials => dispatch =>
   api.user.login(credentials).then(user => {
     localStorage.harmonizeJWT = user.token;
-    // console.log(user);
-    // var u = {
-    //   email: user.email,
-    // }
     dispatch(userLoggedIn(user));
   });
 
-export const logout = () => dispatch =>
-  api.user.confirm(token).then(user => {
-    localStorage.removeItem("harmonizeJWT");
-    dispatch(userLoggedOut());
-  });
+export const logout = () => dispatch => {
+  localStorage.removeItem("harmonizeJWT");
+  dispatch(userLoggedOut());
+};
 
 export const confirm = token => dispatch =>
   api.user.confirm(token).then(user => {
