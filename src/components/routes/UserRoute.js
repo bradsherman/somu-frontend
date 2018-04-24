@@ -10,16 +10,17 @@ class UserRoute extends React.Component {
     super(props);
     this.parsed = {
       access_token: localStorage.spotifyAccessToken || '',
-      refresh_token: localStorage.spotifyRefreshToken || ''
+      refresh_token: localStorage.spotifyRefreshToken || '',
+      spotify_id: ''
     }
   }
 
   componentWillMount() {
-    if (!this.parsed.access_token && !this.parsed.refresh_token) {
+    if (!this.parsed.access_token && !this.parsed.refresh_token && !this.parsed.spotify_id) {
       var x = queryString.parse(this.props.location.search);
       this.parsed = x;
     }
-    if (this.parsed.access_token && this.parsed.refresh_token) {
+    if (this.parsed.access_token && this.parsed.refresh_token && this.parsed.spotify_id) {
       const { dispatch } = this.props;
       localStorage.spotifyAccessToken = this.parsed.access_token;
       localStorage.spotifyRefreshToken = this.parsed.refresh_token;
@@ -52,7 +53,7 @@ UserRoute.propTypes = {
 function mapStateToProps(state) {
   return {
     isAuthenticated: !!state.user.token,
-    spotifyAuth: !!state.user.access_token && !!state.user.refresh_token
+    spotifyAuth: !!state.user.access_token && !!state.user.refresh_token && !!state.user.spotify_id
   }
 }
 

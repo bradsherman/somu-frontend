@@ -7,6 +7,7 @@ import LoginPage from "./components/pages/LoginPage";
 import SignupPage from "./components/pages/SignupPage";
 import DashboardPage from "./components/pages/DashboardPage";
 import RoomPage from "./components/pages/RoomPage";
+import ProfilePage from "./components/pages/ProfilePage";
 import UserRoute from "./components/routes/UserRoute";
 import GuestRoute from "./components/routes/GuestRoute";
 import TopNavigation from "./components/navigation/TopNavigation";
@@ -19,6 +20,7 @@ const App = ({ location, isAuthenticated }) => (
         <GuestRoute location={location} path="/signup" exact component={SignupPage} />
         <UserRoute location={location} path="/dashboard" exact component={DashboardPage} />
         <UserRoute location={location} path="/room" exact component={RoomPage} />
+        <UserRoute location={location} path="/profile" exact component={ProfilePage} />
     </div>
 );
 
