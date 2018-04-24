@@ -9,8 +9,6 @@ class RoomPage extends Component {
     return (
       <div>
         <h1>Room Page</h1>
-        <p>Access Token: {this.props.access_token}</p>
-        <p>Refresh Token: {this.props.refresh_token}</p>
       </div>
     )
   }

@@ -19,11 +19,11 @@ class DashboardPage extends Component {
           //   view={view}
           //   theme={theme}
           // />
+            // <Link to="/"><Button primary>Home</Button></Link>
     return (
       <div>
         <h1>Dashboard Page</h1>
           <div>
-            <Link to="/"><Button primary>Home</Button></Link>
             <Link to="/room"><Button className="green">Rooms</Button></Link>
           </div>
 

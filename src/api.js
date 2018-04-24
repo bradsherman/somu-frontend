@@ -1,4 +1,10 @@
 import axios from 'axios';
+import spotifyWebApi from 'spotify-web-api-js';
+import Promise from 'bluebird';
+
+const spotifyApi = new spotifyWebApi();
+spotifyApi.setPromiseImplementation(Promise);
+spotifyApi.setAccessToken(localStorage.spotifyAccessToken);
 
 const host = "http://35.171.74.240:3000";
 
@@ -13,15 +19,9 @@ export default {
     signup: user =>
       axios.post(host+"/auth/signup", { user }).then(res => res.data.user),
 
-    // spotifyProfile: spotify_id =>
-    //   axios.get('spotify_url').then()
-
     // returns json object 'user' (private)
-    getCurrentProfile: () =>
-      axios.get(base + "/v1/me").then(res => {
-        console.log(res);
-        return res;
-      }),
+    getCurrentProfile: user_id =>
+      spotifyApi.getUser(user_id),
 
     // returns json object 'user' public
     getProfile: spotify_user_id =>
@@ -30,7 +30,7 @@ export default {
         return res;
       })
 
-  }
+  },
 
   playlist: {
     // follow a playlist,  returns the HTTP status code in the response header is 200 OK

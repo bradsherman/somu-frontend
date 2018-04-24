@@ -25,6 +25,7 @@ export const logout = () => dispatch => {
   localStorage.removeItem("harmonizeJWT");
   localStorage.removeItem("spotifyAccessToken");
   localStorage.removeItem("spotifyRefreshToken");
+  localStorage.removeItem("spotifyId");
   dispatch(userLoggedOut());
 };
 

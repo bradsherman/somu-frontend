@@ -11,12 +11,12 @@ class UserRoute extends React.Component {
     this.parsed = {
       access_token: localStorage.spotifyAccessToken || '',
       refresh_token: localStorage.spotifyRefreshToken || '',
-      spotify_id: ''
+      spotify_id: localStorage.spotifyId || ''
     }
   }
 
-  componentWillMount() {
-    if (!this.parsed.access_token && !this.parsed.refresh_token && !this.parsed.spotify_id) {
+  componentDidMount() {
+    if (!this.parsed.access_token || !this.parsed.refresh_token || !this.parsed.spotify_id) {
       var x = queryString.parse(this.props.location.search);
       this.parsed = x;
     }
@@ -24,7 +24,10 @@ class UserRoute extends React.Component {
       const { dispatch } = this.props;
       localStorage.spotifyAccessToken = this.parsed.access_token;
       localStorage.spotifyRefreshToken = this.parsed.refresh_token;
+      localStorage.spotifyId = this.parsed.spotify_id;
       dispatch(spotifyUserLoggedIn(this.parsed));
+    } else {
+      window.location.assign("http://35.171.74.240:3000/spotify/auth/login");
     }
   }
 
@@ -32,7 +35,7 @@ class UserRoute extends React.Component {
     const { isAuthenticated, spotifyAuth, component: Component, ...rest } = this.props;
     return (
       <Route {...rest} render={props =>
-        isAuthenticated
+        isAuthenticated && spotifyAuth
         ?
           <Component {...props} />
         :
