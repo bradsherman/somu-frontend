@@ -31,14 +31,10 @@ class UserRoute extends React.Component {
     const { isAuthenticated, spotifyAuth, component: Component, ...rest } = this.props;
     return (
       <Route {...rest} render={props =>
-        isAuthenticated //&& spotifyAuth
+        isAuthenticated
         ?
           <Component {...props} />
         :
-          // isAuthenticated
-          // ?
-          // window.location.assign("http://35.171.74.240:3000/spotify/auth/login")
-          // :
           <Redirect to="/" />
         }
       />

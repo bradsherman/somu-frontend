@@ -13,6 +13,12 @@ class DashboardPage extends Component {
     };
     const view = 'list'; // or 'coverart'
     const theme = 'black'; // or 'white'
+          // <SpotifyPlayer
+          //   uri="spotify:user:spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
+          //   size={size}
+          //   view={view}
+          //   theme={theme}
+          // />
     return (
       <div>
         <h1>Dashboard Page</h1>
@@ -20,12 +26,6 @@ class DashboardPage extends Component {
             <Link to="/"><Button primary>Home</Button></Link>
             <Link to="/room"><Button className="green">Rooms</Button></Link>
           </div>
-          <SpotifyPlayer
-            uri="spotify:user:spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
-            size={size}
-            view={view}
-            theme={theme}
-          />
 
       </div>
     )
