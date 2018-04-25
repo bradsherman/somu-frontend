@@ -7,7 +7,7 @@ import { login } from '../../actions/auth';
 class LoginPage extends Component {
 
   submit = data =>
-    this.props.login(data).then(() => window.location.assign("http://35.171.74.240:3000/spotify/auth/login"))
+    this.props.login(data).then(() => window.location.assign("http://34.193.174.233:3000/spotify/auth/login"))
 
   render() {
     return (

@@ -6,7 +6,7 @@ import { signup } from '../../actions/users';
 
 class SignupPage extends Component {
   submit = (data) => this.props.signup(data).then(() =>
-    window.location.assign("http://35.171.74.240:3000/spotify/auth/login"));
+    window.location.assign("http://34.193.174.233:3000/spotify/auth/login"));
   render() {
     return (
       <div>
