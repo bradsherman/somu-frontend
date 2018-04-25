@@ -34,8 +34,8 @@ class ProfilePage extends Component {
     return (
       <div>
         <h1>My Profile</h1>
-        <h4>Username: </h4><p>{this.state.username}</p>
-        <h4>Display Name: </h4><p>{this.state.displayName}</p>
+        <h4>Spotify Username: </h4><p>{this.state.username}</p>
+        <h4>Spotify Display Name: </h4><p>{this.state.displayName}</p>
       </div>
     );
   }

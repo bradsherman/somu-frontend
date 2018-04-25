@@ -10,10 +10,13 @@ export const userLoggedOut = () => ({
   type: USER_LOGGED_OUT
 });
 
-export const spotifyUserLoggedIn = user => ({
-  type: SPOTIFY_USER_LOGGED_IN,
-  user
-});
+export const spotifyUserLoggedIn = user => {
+  api.spotifyApi.setAccessToken(user.access_token);
+  return {
+    type: SPOTIFY_USER_LOGGED_IN,
+    user
+  }
+};
 
 export const login = credentials => dispatch =>
   api.user.login(credentials).then(user => {

@@ -11,6 +11,7 @@ import ProfilePage from "./components/pages/ProfilePage";
 import UserRoute from "./components/routes/UserRoute";
 import GuestRoute from "./components/routes/GuestRoute";
 import TopNavigation from "./components/navigation/TopNavigation";
+import NewRoomPage from "./components/pages/NewRoomPage";
 
 const App = ({ location, isAuthenticated }) => (
     <div className="ui container">
@@ -21,6 +22,7 @@ const App = ({ location, isAuthenticated }) => (
         <UserRoute location={location} path="/dashboard" exact component={DashboardPage} />
         <UserRoute location={location} path="/room" exact component={RoomPage} />
         <UserRoute location={location} path="/profile" exact component={ProfilePage} />
+        <UserRoute location={location} path="/room/new" exact component={NewRoomPage}/>
     </div>
 );
 

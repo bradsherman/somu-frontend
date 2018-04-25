@@ -32,13 +32,36 @@ export default {
 
   },
 
+  room: {
+    createRoom: (data, playlist_id) =>
+      axios.post(host + "/room", {...data, playlist_id: playlist_id})
+        .then(res => {
+          console.log("Hello!!!!!");
+          console.log(res);
+          return res;
+        })
+        .catch(err => {
+          console.log(err);
+          return err;
+        }),
+
+  },
+
   playlist: {
     // follow a playlist,  returns the HTTP status code in the response header is 200 OK
+    createPlaylist: data =>
+      spotifyApi.createPlaylist(data.owner_id, {
+        name: "Harmonize."+data.name,
+        public: false,
+        collaborative: true,
+        description: "A playlist made through Harmonize."
+      }),
     follow: (owner_id, playlist_id) =>
       axios.put(base + "/v1/users/" + owner_id  + "/playlists/" + playlist_id + "/followers", { public: false }).then(res => {
         console.log(res);
         return res;
       })
-  }
+  },
+  spotifyApi
 
 }

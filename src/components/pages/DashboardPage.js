@@ -24,7 +24,7 @@ class DashboardPage extends Component {
       <div>
         <h1>Dashboard Page</h1>
           <div>
-            <Link to="/room"><Button className="green">Rooms</Button></Link>
+            <Link to="/room/new"><Button className="green">Create a Room</Button></Link>
           </div>
 
       </div>

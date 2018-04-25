@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
-import { spotifyUserLoggedIn } from '../../actions/auth';
+import { Link } from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
 
 class RoomPage extends Component {
 
@@ -9,6 +9,7 @@ class RoomPage extends Component {
     return (
       <div>
         <h1>Room Page</h1>
+        <Link to="/room/new"><Button>New Room</Button></Link>
       </div>
     )
   }
