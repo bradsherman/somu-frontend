@@ -4,6 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { spotifyUserLoggedIn } from '../../actions/auth';
+import api from '../../api';
 
 class UserRoute extends React.Component {
   constructor(props) {
@@ -27,7 +28,8 @@ class UserRoute extends React.Component {
       localStorage.spotifyId = this.parsed.spotify_id;
       dispatch(spotifyUserLoggedIn(this.parsed));
     } else {
-      window.location.assign("http://52.4.91.6:3000/spotify/auth/login");
+      // window.location.assign("http://52.4.91.6:3000/spotify/auth/login");
+      window.location.assign(api.api_url+"/spotify/auth/login");
     }
   }
 

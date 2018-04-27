@@ -10,7 +10,7 @@ class ProfilePage extends Component {
     super(props);
     this.state = {
       displayName: '',
-      username: '',
+      spotify_username: '',
       img: '',
     }
   }
@@ -19,7 +19,7 @@ class ProfilePage extends Component {
   updateInfo() {
     const s = store.getState();
     api.user.getCurrentProfile(s.user.spotify_id).then(res => {
-        this.setState({ displayName: res.display_name, username: res.id, img: res.images[0].url });
+        this.setState({ displayName: res.display_name, spotify_username: res.id, img: res.images[0].url });
       })
       .catch(err => {
         console.log(err);
@@ -34,7 +34,7 @@ class ProfilePage extends Component {
     return (
       <div>
         <h1>My Profile</h1>
-        <h4>Spotify Username: </h4><p>{this.state.username}</p>
+        <h4>Spotify Username: </h4><p>{this.state.spotify_username}</p>
         <h4>Spotify Display Name: </h4><p>{this.state.displayName}</p>
       </div>
     );

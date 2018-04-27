@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SignupForm from '../forms/SignupForm';
 import { signup } from '../../actions/users';
+import api from '../../api';
 
 class SignupPage extends Component {
   submit = (data) => this.props.signup(data).then(() =>
-    window.location.assign("http://52.4.91.6:3000/spotify/auth/login"));
+    // window.location.assign("http://52.4.91.6:3000/spotify/auth/login"));
+    window.location.assign(api.api_url+"/spotify/auth/login"));
   render() {
     return (
       <div>

@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { Form, Button, Message } from 'semantic-ui-react';
 import Validator from "validator";
 import InlineError from '../messages/InlineError';
+import store from "../../store";
 
 class RoomForm extends Component {
 
   state = {
     data: {
       name: "",
+      username: "",
       owner_id: localStorage.spotifyId || "",
       location: "",
       type: 0
@@ -22,13 +24,14 @@ class RoomForm extends Component {
   });
 
   onSubmit = () => {
+    const uname = store.getState().user.username;
     const errors = this.validate(this.state.data);
     this.setState({ errors });
     if (Object.keys(errors).length === 0) {
       this.setState({ loading: true });
       this.props
-        .submit(this.state.data)
-        .catch(err => { console.log(err) });//this.setState({ errors: err.response.data.errors, loading: false })});
+        .submit({...this.state.data, username: uname})
+        .catch(err => this.setState({ errors: err.response.data.errors, loading: false }));
     }
   };
 

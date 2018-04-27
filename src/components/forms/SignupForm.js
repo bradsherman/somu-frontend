@@ -41,6 +41,7 @@ class SignupForm extends Component {
       this.setState({ loading: true });
       this.props.submit(this.state.data)
         .catch(err => {
+          console.log(err);
           return this.setState({ errors: err.response.data.errors, loading: false })
         });
     }
