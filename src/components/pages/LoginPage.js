@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
 
+var ip = process.env.IP;
+
 class LoginPage extends Component {
 
   submit = data =>
-    this.props.login(data).then(() => window.location.assign("http://52.4.91.6:3000/spotify/auth/login"))
+    this.props.login(data).then(() => window.location.assign("http://"+ip+":3000/spotify/auth/login"))
 
   render() {
     return (
