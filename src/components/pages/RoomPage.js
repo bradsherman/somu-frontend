@@ -11,6 +11,13 @@ class RoomPage extends Component {
     song: null
   }
 
+  onSongSelect = song => {
+    this.setState({ song });
+    console.log('hi');
+    // add song to playlist API call
+  }
+
+
   render() {
     return (
       <div>
@@ -20,7 +27,7 @@ class RoomPage extends Component {
 
         <Segment>
           <h3>Add New Song to Your Room</h3>
-          <SearchSongForm/>
+          <SearchSongForm onSongSelect={this.onSongSelect} />
         </Segment>
 
       </div>
