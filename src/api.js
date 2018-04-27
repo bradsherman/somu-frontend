@@ -5,9 +5,8 @@ import Promise from 'bluebird';
 const spotifyApi = new spotifyWebApi();
 spotifyApi.setPromiseImplementation(Promise);
 spotifyApi.setAccessToken(localStorage.spotifyAccessToken);
-var ip = process.env.IP;
 
-const host = "http://"+ip+":3000";
+const host = "http://34.193.174.233:3000";
 
 // Spotify base url
 const base = "https://api.spotify.com";

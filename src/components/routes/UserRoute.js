@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { spotifyUserLoggedIn } from '../../actions/auth';
 
-var ip = process.env.IP;
-
 class UserRoute extends React.Component {
   constructor(props) {
     super(props);
@@ -29,7 +27,7 @@ class UserRoute extends React.Component {
       localStorage.spotifyId = this.parsed.spotify_id;
       dispatch(spotifyUserLoggedIn(this.parsed));
     } else {
-      window.location.assign("http://"+ip+":3000/spotify/auth/login");
+      window.location.assign("http://34.193.174.233:3000/spotify/auth/login");
     }
   }
 

@@ -4,11 +4,9 @@ import { connect } from 'react-redux';
 import SignupForm from '../forms/SignupForm';
 import { signup } from '../../actions/users';
 
-var ip = process.env.IP;
-
 class SignupPage extends Component {
   submit = (data) => this.props.signup(data).then(() =>
-    window.location.assign("http://"+ip+":3000/spotify/auth/login"));
+    window.location.assign("http://34.193.174.233:3000/spotify/auth/login"));
   render() {
     return (
       <div>
