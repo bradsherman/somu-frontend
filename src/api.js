@@ -64,6 +64,14 @@ export default {
       })
   },
   api_url,
+
+  songs: {
+    searchSongs: query =>
+        spotifyApi.searchTracks(query, {
+          limit: 5
+        })
+  },
+
   spotifyApi
 
 }

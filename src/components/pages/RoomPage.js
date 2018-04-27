@@ -3,11 +3,24 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import SpotifyPlayer from 'react-spotify-player';
+import { Segment } from 'semantic-ui-react';
+import SearchSongForm from '../forms/SearchSongForm';
 
 class RoomPage extends Component {
   constructor(props) {
     super(props);
   }
+
+  state = {
+    song: null
+  }
+
+  onSongSelect = song => {
+    this.setState({ song });
+    console.log('hi');
+    // add song to playlist API call
+  }
+
 
   render() {
     // size may also be a plain string using the presets 'large' or 'compact'
@@ -28,8 +41,16 @@ class RoomPage extends Component {
           view={view}
           theme={theme}
         />
+
         <Link to="/room/new"><Button>New Room</Button></Link>
+
+        <Segment>
+          <h3>Add New Song to Your Room</h3>
+          <SearchSongForm onSongSelect={this.onSongSelect} />
+        </Segment>
+
       </div>
+
     )
   }
 
