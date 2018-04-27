@@ -62,6 +62,14 @@ export default {
         return res;
       })
   },
+
+  songs: {
+    searchSongs: query =>
+        spotifyApi.searchTracks(query, {
+          limit: 5
+        })
+  },
+
   spotifyApi
 
 }
