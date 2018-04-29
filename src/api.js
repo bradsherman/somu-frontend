@@ -6,7 +6,11 @@ const spotifyApi = new spotifyWebApi();
 spotifyApi.setPromiseImplementation(Promise);
 spotifyApi.setAccessToken(localStorage.spotifyAccessToken);
 
-const host = "http://34.193.174.233:3000";
+// prod
+// const api_url = "http://52.4.91.6:3000";
+// brad
+const api_url = "http://35.171.74.240:3000";
+
 
 // Spotify base url
 const base = "https://api.spotify.com";
@@ -14,10 +18,12 @@ const base = "https://api.spotify.com";
 export default {
   user: {
     login: credentials =>
-      axios.post(host+"/auth/login", { credentials }).then(res => res.data.user),
+      axios.post(api_url+"/auth/login", { credentials }).then(res => res.data.user),
 
     signup: user =>
-      axios.post(host+"/auth/signup", { user }).then(res => res.data.user),
+      axios.post(api_url+"/auth/signup", { user }).then(res => {
+        console.log(res);
+        return res.data.user}),
 
     // returns json object 'user' (private)
     getCurrentProfile: user_id =>
@@ -34,16 +40,12 @@ export default {
 
   room: {
     createRoom: (data, playlist_id) =>
-      axios.post(host + "/room", {...data, playlist_id: playlist_id})
-        .then(res => {
-          console.log("Hello!!!!!");
-          console.log(res);
-          return res;
-        })
-        .catch(err => {
-          console.log(err);
-          return err;
-        }),
+      axios.post(api_url + "/room", {...data, playlist_id: playlist_id}),
+
+    getRooms: (username) =>
+      axios.get(api_url+ "/room?user="+username),
+
+
 
   },
 
@@ -60,21 +62,9 @@ export default {
       axios.put(base + "/v1/users/" + owner_id  + "/playlists/" + playlist_id + "/followers", { public: false }).then(res => {
         console.log(res);
         return res;
-      }),
-    getPlaylists: spotify_user_id =>
-      spotifyApi.getUserPlaylists(spotify_user_id, {
-        limit: 1
       })
   },
   api_url,
-
-  songs: {
-    searchSongs: query =>
-        spotifyApi.searchTracks(query, {
-          limit: 5
-        })
-  },
-
   spotifyApi
 
 
