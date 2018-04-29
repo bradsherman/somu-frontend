@@ -64,8 +64,20 @@ export default {
       axios.put(base + "/v1/users/" + owner_id  + "/playlists/" + playlist_id + "/followers", { public: false }).then(res => {
         console.log(res);
         return res;
+      }),
+    getPlaylists: spotify_user_id =>
+      spotifyApi.getUserPlaylists(spotify_user_id, {
+        limit: 1
+      }),
+  },
+
+  songs: {
+    searchSongs: query =>
+      spotifyApi.searchTracks(query, {
+        limit: 5
       })
   },
+
   api_url,
   spotifyApi
 

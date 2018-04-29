@@ -56,6 +56,7 @@ class RoomPage extends Component {
           view={view}
           theme={theme}
         />
+        
         <Segment>
           <h3> Search Your Playlists </h3>
           <SearchPlaylistForm onPlaylistSelect={this.onPlaylistSelect} />
