@@ -33,8 +33,7 @@ class DashboardPage extends Component {
 
   onClick(e, data) {
     e.preventDefault();
-    console.log(e);
-    console.log(data);
+    console.log(e.target);
   }
 
   render() {
@@ -59,6 +58,7 @@ class DashboardPage extends Component {
                 key={r.ROOM_ID}
                 name={r.NAME}
                 owner={r.OWNER_ID}
+                playlist_id={r.playlist_id}
                 onClick={this.onClick}
               />
             )}

@@ -35,12 +35,6 @@ class RoomPage extends Component {
     return (
       <div>
         <h1>Room Page</h1>
-        <SpotifyPlayer
-          uri="spotify:user:spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
-          size={size}
-          view={view}
-          theme={theme}
-        />
 
         <Link to="/room/new"><Button>New Room</Button></Link>
 
@@ -48,6 +42,13 @@ class RoomPage extends Component {
           <h3>Add New Song to Your Room</h3>
           <SearchSongForm onSongSelect={this.onSongSelect} />
         </Segment>
+
+        <SpotifyPlayer
+          uri="spotify:user:spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
+          size={size}
+          view={view}
+          theme={theme}
+        />
 
       </div>
 
