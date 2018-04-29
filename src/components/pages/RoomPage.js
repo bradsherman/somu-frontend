@@ -5,6 +5,7 @@ import { Button } from 'semantic-ui-react';
 import SpotifyPlayer from 'react-spotify-player';
 import { Segment } from 'semantic-ui-react';
 import SearchSongForm from '../forms/SearchSongForm';
+import SearchPlaylistForm from '../forms/SearchPlaylistForm';
 
 class RoomPage extends Component {
   constructor(props) {
@@ -12,15 +13,21 @@ class RoomPage extends Component {
   }
 
   state = {
-    song: null
+    song: null,
+    playlist: null
   }
 
   onSongSelect = song => {
     this.setState({ song });
-    console.log('hi');
+    console.log('song selected');
     // add song to playlist API call
   }
 
+  onPlaylistSelect = playlist => {
+    this.setState({ playlist });
+    console.log('playlist selected');
+    // add playlist songs view
+  }
 
   render() {
     // size may also be a plain string using the presets 'large' or 'compact'
@@ -47,6 +54,11 @@ class RoomPage extends Component {
         <Segment>
           <h3>Add New Song to Your Room</h3>
           <SearchSongForm onSongSelect={this.onSongSelect} />
+        </Segment>
+
+        <Segment>
+          <h3> Search Your Playlists </h3>
+          <SearchPlaylistForm onPlaylistSelect={this.onPlaylistSelect} />
         </Segment>
 
       </div>
