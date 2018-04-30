@@ -9,13 +9,17 @@ class SearchPlaylistForm extends React.Component {
   state = {
     loading: false,
     options: [],
-    songs: {}
+    playlists: {}
   };
 
   onClick = (e, data) => {
     clearTimeout(this.timer);
     this.timer = setTimeout(this.fetchOptions, 1000);
-  }
+  };
+
+  onChange = (e, data) => {
+    this.props.onPlaylistSelect(this.state.playlists[data.value]);
+  };
 
   fetchOptions = () => {
     const s = store.getState();
@@ -24,6 +28,20 @@ class SearchPlaylistForm extends React.Component {
       .then( res => {
         console.log("Result: ");
         console.log(res);
+        return res.items;
+      })
+      .then( items => {
+        const options = [];
+        const playlistsHash = {};
+        items.forEach( item => {
+          playlistsHash[item.id] = item;
+          options.push({
+            key: item.id,
+            value: item.id,
+            text: item.name
+          });
+        });
+        this.setState({ loading: false, options, playlists: playlistsHash });
       })
       .catch( err => {
         console.log("Error: ");
@@ -42,6 +60,7 @@ class SearchPlaylistForm extends React.Component {
           options={this.state.options}
           loading={this.state.loading}
           onClick={this.onClick}
+          onChange={this.onChange}
         />
       </Form>
     )

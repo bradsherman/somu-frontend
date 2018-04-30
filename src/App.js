@@ -20,7 +20,7 @@ const App = ({ location, isAuthenticated }) => (
         <GuestRoute location={location} path="/login" exact component={LoginPage} />
         <GuestRoute location={location} path="/signup" exact component={SignupPage} />
         <UserRoute location={location} path="/dashboard" exact component={DashboardPage} />
-        <UserRoute location={location} path="/room/:roomId" exact component={RoomPage} />
+        <UserRoute location={location} path="/room" exact component={RoomPage} />
         <UserRoute location={location} path="/profile" exact component={ProfilePage} />
         <UserRoute location={location} path="/room/new" exact component={NewRoomPage}/>
     </div>

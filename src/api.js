@@ -60,15 +60,24 @@ export default {
         collaborative: true,
         description: "A playlist made through Harmonize."
       }),
+
     follow: (owner_id, playlist_id) =>
       axios.put(base + "/v1/users/" + owner_id  + "/playlists/" + playlist_id + "/followers", { public: false }).then(res => {
         console.log(res);
         return res;
       }),
+
     getPlaylists: spotify_user_id =>
       spotifyApi.getUserPlaylists(spotify_user_id, {
-        limit: 1
+        limit: 50
       }),
+
+    getPlaylist: (spotify_user_id, playlist_id) =>
+      spotifyApi.getPlaylist(spotify_user_id, playlist_id),
+
+    addTracksToPlaylist: (spotify_user_id, playlist_id, song_uri) =>
+      spotifyApi.addTracksToPlaylist(spotify_user_id, playlist_id, [song_uri]),
+
   },
 
   songs: {
@@ -76,6 +85,7 @@ export default {
       spotifyApi.searchTracks(query, {
         limit: 5
       })
+
   },
 
   api_url,
