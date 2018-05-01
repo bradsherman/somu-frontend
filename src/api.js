@@ -6,16 +6,16 @@ const spotifyApi = new spotifyWebApi();
 spotifyApi.setPromiseImplementation(Promise);
 spotifyApi.setAccessToken(localStorage.spotifyAccessToken);
 
-// prod
-// const api_url = "http://52.4.91.6:3000";
 // brad
-const api_url = "http://35.171.74.240:3000";
+let api_url = "http://35.171.74.240:3000";
 // courtney
 // const api_url = "http://34.193.174.233:3000";
 
 
 // Spotify base url
-const base = "https://api.spotify.com";
+if (process.end.NODE_ENV === "production") {
+  api_url = "http://52.4.91.6:3000";
+}
 
 export default {
   user: {
