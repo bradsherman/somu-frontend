@@ -1,9 +1,10 @@
 import axios from 'axios';
-import spotifyWebApi from 'spotify-web-api-js';
 import Promise from 'bluebird';
+import spotifyWebApi from 'spotify-web-api-js';
 
-const spotifyApi = new spotifyWebApi();
-spotifyApi.setPromiseImplementation(Promise);
+
+const spotifyApi = Promise.promisifyAll(new spotifyWebApi());
+// spotifyApi.setPromiseImplementation(Promise);
 spotifyApi.setAccessToken(localStorage.spotifyAccessToken);
 
 // brad
@@ -29,7 +30,7 @@ export default {
 
     // returns json object 'user' (private)
     getCurrentProfile: user_id =>
-      spotifyApi.getUser(user_id),
+      spotifyApi.getUserAsync(user_id),
 
     // returns json object 'user' public
     getProfile: spotify_user_id =>
@@ -52,7 +53,7 @@ export default {
 
     joinRoom: data =>
       axios.post(api_url + "/room_member", { data })
-        .then(r =>spotifyApi.followPlaylist(r.info.owner_id, r.info.playlist_id))
+        .then(r =>spotifyApi.followPlaylistAsync(r.info.owner_id, r.info.playlist_id))
 
 
 
@@ -61,7 +62,7 @@ export default {
   playlist: {
     // follow a playlist,  returns the HTTP status code in the response header is 200 OK
     createPlaylist: data =>
-      spotifyApi.createPlaylist(data.owner_id, {
+      spotifyApi.createPlaylistAsync(data.owner_id, {
         name: "Harmonize."+data.name,
         public: false,
         collaborative: true,
@@ -70,26 +71,25 @@ export default {
 
     follow: (owner_id, playlist_id) =>
       axios.put(base + "/v1/users/" + owner_id  + "/playlists/" + playlist_id + "/followers", { public: false }).then(res => {
-        console.log(res);
         return res;
       }),
 
     getPlaylists: spotify_user_id =>
-      spotifyApi.getUserPlaylists(spotify_user_id, {
+      spotifyApi.getUserPlaylistsAsync(spotify_user_id, {
         limit: 50
       }),
 
     getPlaylist: (spotify_user_id, playlist_id) =>
-      spotifyApi.getPlaylist(spotify_user_id, playlist_id),
+      spotifyApi.getPlaylistAsync(spotify_user_id, playlist_id),
 
     addTracksToPlaylist: (spotify_user_id, playlist_id, song_uri) =>
-      spotifyApi.addTracksToPlaylist(spotify_user_id, playlist_id, [song_uri]),
+      spotifyApi.addTracksToPlaylistAsync(spotify_user_id, playlist_id, [song_uri]),
 
   },
 
   songs: {
     searchSongs: query =>
-      spotifyApi.searchTracks(query, {
+      spotifyApi.searchTracksAsync(query, {
         limit: 10
       })
 

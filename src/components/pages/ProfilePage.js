@@ -19,7 +19,6 @@ class ProfilePage extends Component {
   updateInfo() {
     const s = store.getState();
     api.user.getCurrentProfile(s.user.spotify_id).then(res => {
-        console.log(res);
         this.setState({ displayName: res.display_name, spotify_username: res.id, img: res.images[0].url });
       })
       .catch(err => {
