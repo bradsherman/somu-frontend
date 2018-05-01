@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Button } from "semantic-ui-react";
 import RoomCard from '../RoomCard';
 import store from "../../store";
@@ -14,6 +14,7 @@ class DashboardPage extends Component {
       owned_rooms: [],
       rooms: []
     }
+    this.onClick = this.onClick.bind(this);
   }
 
   getRooms() {
@@ -33,7 +34,8 @@ class DashboardPage extends Component {
 
   onClick(e, data) {
     e.preventDefault();
-    console.log(e.target);
+    this.props.history.push('/room/'+data.id);
+
   }
 
   render() {
@@ -52,13 +54,13 @@ class DashboardPage extends Component {
         <h1>Dashboard Page</h1>
           <div>
             <h3>My Rooms</h3>
-            <Link to="/room/new"><Button className="green">Create a Room</Button></Link>
+            <Link to="/new_room"><Button className="green">Create a Room</Button></Link>
             {this.state.owned_rooms && this.state.owned_rooms.map(r =>
               <RoomCard
                 key={r.ROOM_ID}
                 name={r.NAME}
                 owner={r.OWNER_ID}
-                playlist_id={r.playlist_id}
+                playlist_id={r.PLAYLIST_ID}
                 onClick={this.onClick}
               />
             )}

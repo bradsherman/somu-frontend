@@ -37,7 +37,7 @@ class UserRoute extends React.Component {
     const { isAuthenticated, spotifyAuth, component: Component, ...rest } = this.props;
     return (
       <Route {...rest} render={props =>
-        isAuthenticated && spotifyAuth
+        isAuthenticated //&& spotifyAuth
         ?
           <Component {...props} />
         :

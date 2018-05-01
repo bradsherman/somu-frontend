@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import SearchSongForm from '../forms/SearchSongForm';
 import SearchPlaylistForm from '../forms/SearchPlaylistForm';
 import PlaylistForm from '../forms/PlaylistForm';
+import api from '../../api';
 
 class RoomPage extends React.Component {
 
@@ -17,9 +18,32 @@ class RoomPage extends React.Component {
 
   state = {
     song: null,
-    owner_id: null,
-    playlist_id: null
+    name: "",
+    owner_id: "",
+    room_playlist_id: "",
+    playlist_id: "",
+    members: [],
+    playlist_uri: ""
   };
+
+  componentWillMount() {
+    this.setState({ room_playlist_id: this.props.match.params.playlist_id });
+  }
+
+  componentDidMount() {
+    console.log("STATE");
+    console.log(this.state);
+    api.room.getRoom(this.state.room_playlist_id)
+      .then(res => {
+        // console.log(res);
+        this.setState({
+          name: res.data.info.NAME,
+          owner_id: res.data.info.OWNER_ID,
+          members: res.data.members,
+          playlist_uri: "spotify:user:"+res.data.info.OWNER_ID+":playlist:"+res.data.info.PLAYLIST_ID
+        })
+      });
+  }
 
   onSongSelect = song => {
     this.setState({ song });
@@ -49,20 +73,24 @@ class RoomPage extends React.Component {
 
     return (
       <div>
-        <h1>Room Page</h1>
+        <h1>{this.state.name}</h1>
 
-        <Link to="/room/new"><Button>New Room</Button></Link>
+        <Link to="/new_room"><Button>New Room</Button></Link>
 
         <Segment>
           <h3> Room Members </h3>
+          {this.state.members.map(m => {
+            console.log(m);
+            return (<p key={m.USER_ID}>{m.FIRST_NAME} {m.LAST_NAME} ({m.USERNAME})</p>)
+          })}
         </Segment>
 
-        <SpotifyPlayer
-          uri="spotify:user:spotify:playlist:37i9dQZF1DXcBWIGoYBM5M"
+        {this.state.owner_id && this.state.playlist_uri && <SpotifyPlayer
+          uri={this.state.playlist_uri}
           size={size}
           view={view}
           theme={theme}
-        />
+        />}
 
         <Segment>
           <h3>Add New Song to Your Room</h3>
