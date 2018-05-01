@@ -7,9 +7,9 @@ spotifyApi.setPromiseImplementation(Promise);
 spotifyApi.setAccessToken(localStorage.spotifyAccessToken);
 
 // brad
-let api_url = "http://35.171.74.240:3000";
+//let api_url = "http://35.171.74.240:3000";
 // courtney
-// const api_url = "http://34.193.174.233:3000";
+ let api_url = "http://34.193.174.233:3000";
 
 
 // Spotify base url
