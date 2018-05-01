@@ -44,10 +44,10 @@ class SearchPlaylistForm extends React.Component {
         this.setState({ loading: false, options, playlists: playlistsHash });
       })
       .catch( err => {
-        console.log("Error: ");
         console.log(err);
       })
   };
+
 
   render() {
 

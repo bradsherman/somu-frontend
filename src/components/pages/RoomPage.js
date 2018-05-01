@@ -36,11 +36,8 @@ class RoomPage extends React.Component {
   }
 
   componentDidMount() {
-    console.log("STATE");
-    console.log(this.state);
     api.room.getRoom(this.state.room_playlist_id)
       .then(res => {
-        console.log(res);
         this.setState({
           name: res.data.info.NAME,
           owner_id: res.data.info.OWNER_ID,
@@ -53,18 +50,16 @@ class RoomPage extends React.Component {
 
   onSongSelect = song => {
     this.setState({ song });
-    console.log("select song");
-    console.log(song);
     const s = store.getState();
     // add song to playlist API call
     api.playlist.addTracksToPlaylist(s.user.spotify_id, this.state.room_playlist_id, song.uri)
       .then(res => {
-        console.log('RESULT');
-        console.log(res);
-        this.props.history.push('/dashboard');
+        // this.props.history.push('/dashboard');
+        // this.props.history.push('/room/'+this.state.room_playlist_id);
+        window.location.reload();
       })
       .catch(err => {
-        console.log(res);
+        console.log(err);
       })
     // song.uri
   };
@@ -121,7 +116,6 @@ class RoomPage extends React.Component {
         <Segment>
           <h3> Room Members </h3>
           {this.state.members.map(m => {
-            console.log(m);
             return (<p key={m.USER_ID}>{m.FIRST_NAME} {m.LAST_NAME} ({m.USERNAME})</p>)
           })}
         </Segment>

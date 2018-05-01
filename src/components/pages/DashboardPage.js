@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { Button } from "semantic-ui-react";
+import { Button, Divider } from "semantic-ui-react";
 import RoomCard from '../RoomCard';
 import store from "../../store";
 import api from "../../api";
@@ -21,7 +21,7 @@ class DashboardPage extends Component {
     const user = store.getState().user.username;
     api.room.getRooms(user)
       .then(res => {
-        this.setState({owned_rooms: res.data.owned_rooms });//, rooms: res.rooms});
+        this.setState({owned_rooms: res.data.owned_rooms, rooms: res.data.rooms });
       })
       .catch(err => {
         console.log(err);
@@ -39,24 +39,25 @@ class DashboardPage extends Component {
   }
 
   render() {
-            // set props here
-            // {this.state.owned_rooms.map(r => <RoomCard />)}
-            // {this.state.owned_rooms[0] &&
-            //   <RoomCard key={this.state.owned_rooms[0].room_id} name={this.state.owned_rooms[0].name} owner={this.state.owned_rooms[0].owner_id}/>
-            // }
-              // console.log('map of owned rooms');
-              // console.log(r);
-              // return (
-              //   // <div key={r.room_id}>{r.name}</div>
-              // )
     return (
       <div style={{textAlign: 'center'}}>
-        <h1>Dashboard Page</h1>
+        <h1>My Rooms</h1>
           <div>
-            <h3>My Rooms</h3>
             <Link to="/new_room"><Button className="green">Create a Room</Button></Link>
             <Link to="/join_room"><Button primary>Join a Room</Button></Link>
+            <h5>Owner</h5>
             {this.state.owned_rooms && this.state.owned_rooms.map(r =>
+              <RoomCard
+                key={r.ROOM_ID}
+                name={r.NAME}
+                owner={r.OWNER_ID}
+                playlist_id={r.PLAYLIST_ID}
+                onClick={this.onClick}
+              />
+            )}
+            <Divider section />
+            <h5>Member</h5>
+            {this.state.rooms && this.state.rooms.map(r =>
               <RoomCard
                 key={r.ROOM_ID}
                 name={r.NAME}

@@ -8,7 +8,6 @@ import api from '../../api';
 class LoginPage extends Component {
 
   submit = data =>
-    // this.props.login(data).then(() => window.location.assign("http://52.4.91.6:3000/spotify/auth/login"))
     this.props.login(data).then(() => window.location.assign(api.api_url+"/spotify/auth/login"))
 
   render() {

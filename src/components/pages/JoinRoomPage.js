@@ -6,9 +6,8 @@ import api from '../../api';
 class JoinRoomPage extends Component {
 
   submit = data =>
-    api.room.joinRoom(data.id).then((res) => {
-      console.log(res);
-    });
+    api.room.joinRoom(data).then(() => this.props.history.push('/dashboard'));
+
 
   render() {
     return (
