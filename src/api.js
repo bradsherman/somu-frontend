@@ -13,7 +13,7 @@ let api_url = "http://35.171.74.240:3000";
 
 
 // Spotify base url
-if (process.end.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
   api_url = "http://52.4.91.6:3000";
 }
 
