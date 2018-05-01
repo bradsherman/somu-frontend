@@ -50,6 +50,9 @@ export default {
     getRoom: playlist_id =>
       axios.get(api_url + "/room/" + playlist_id),
 
+    joinRoom: room_id =>
+      axios.post(api_url + "/room_")
+
 
 
   },

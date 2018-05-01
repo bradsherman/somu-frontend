@@ -9,6 +9,7 @@ import SearchSongForm from '../forms/SearchSongForm';
 import SearchPlaylistForm from '../forms/SearchPlaylistForm';
 import PlaylistForm from '../forms/PlaylistForm';
 import api from '../../api';
+import store from '../../store';
 
 class RoomPage extends React.Component {
 
@@ -20,10 +21,11 @@ class RoomPage extends React.Component {
     song: null,
     name: "",
     owner_id: "",
+    room_id: "",
     room_playlist_id: "",
     playlist_id: "",
     members: [],
-    playlist_uri: ""
+    playlist_uri: "",
     options: [],
     loading: false,
     tracks: {}
@@ -38,10 +40,11 @@ class RoomPage extends React.Component {
     console.log(this.state);
     api.room.getRoom(this.state.room_playlist_id)
       .then(res => {
-        // console.log(res);
+        console.log(res);
         this.setState({
           name: res.data.info.NAME,
           owner_id: res.data.info.OWNER_ID,
+          room_id: res.data.info.ROOM_ID,
           members: res.data.members,
           playlist_uri: "spotify:user:"+res.data.info.OWNER_ID+":playlist:"+res.data.info.PLAYLIST_ID
         })
@@ -52,7 +55,17 @@ class RoomPage extends React.Component {
     this.setState({ song });
     console.log("select song");
     console.log(song);
+    const s = store.getState();
     // add song to playlist API call
+    api.playlist.addTracksToPlaylist(s.user.spotify_id, this.state.room_playlist_id, song.uri)
+      .then(res => {
+        console.log('RESULT');
+        console.log(res);
+        this.props.history.push('/dashboard');
+      })
+      .catch(err => {
+        console.log(res);
+      })
     // song.uri
   };
 
@@ -103,8 +116,7 @@ class RoomPage extends React.Component {
     return (
       <div>
         <h1>{this.state.name}</h1>
-
-        <Link to="/new_room"><Button>New Room</Button></Link>
+        <h4>Room ID: {this.state.room_id} (Use this to invite members to your room!)</h4>
 
         <Segment>
           <h3> Room Members </h3>

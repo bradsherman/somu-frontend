@@ -12,6 +12,7 @@ import UserRoute from "./components/routes/UserRoute";
 import GuestRoute from "./components/routes/GuestRoute";
 import TopNavigation from "./components/navigation/TopNavigation";
 import NewRoomPage from "./components/pages/NewRoomPage";
+import JoinRoomPage from "./components/pages/JoinRoomPage";
 
 const App = ({ location, isAuthenticated }) => (
     <div className="ui container">
@@ -23,6 +24,7 @@ const App = ({ location, isAuthenticated }) => (
         <UserRoute location={location} path="/room/:playlist_id" component={RoomPage} />
         <UserRoute location={location} path="/profile" exact component={ProfilePage} />
         <UserRoute location={location} path="/new_room" exact component={NewRoomPage}/>
+        <UserRoute location={location} path="/join_room" exact component={JoinRoomPage} />
     </div>
 );
 

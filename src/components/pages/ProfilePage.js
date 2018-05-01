@@ -19,6 +19,7 @@ class ProfilePage extends Component {
   updateInfo() {
     const s = store.getState();
     api.user.getCurrentProfile(s.user.spotify_id).then(res => {
+        console.log(res);
         this.setState({ displayName: res.display_name, spotify_username: res.id, img: res.images[0].url });
       })
       .catch(err => {
@@ -36,6 +37,7 @@ class ProfilePage extends Component {
         <h1>My Profile</h1>
         <h4>Spotify Username: </h4><p>{this.state.spotify_username}</p>
         <h4>Spotify Display Name: </h4><p>{this.state.displayName}</p>
+        <Image src={this.state.img} />
       </div>
     );
   }
