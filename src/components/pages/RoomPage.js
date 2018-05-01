@@ -24,6 +24,9 @@ class RoomPage extends React.Component {
     playlist_id: "",
     members: [],
     playlist_uri: ""
+    options: [],
+    loading: false,
+    tracks: {}
   };
 
   componentWillMount() {
@@ -47,14 +50,40 @@ class RoomPage extends React.Component {
 
   onSongSelect = song => {
     this.setState({ song });
+    console.log("select song");
+    console.log(song);
     // add song to playlist API call
+    // song.uri
   };
 
   onPlaylistSelect = playlist => {
+
+    this.setState({loading: true});
     this.setState({ playlist_id: playlist.id });
     this.setState({ owner_id: playlist.owner.id });
-    // add playlist songs view
+
+    api.playlist.getPlaylist(playlist.owner.id, playlist.id )
+      .then( res => {
+        return res.tracks.items;
+      })
+      .then( items => {
+        const songsHash = {};
+        const options1 = [];
+        items.forEach( item => {
+          songsHash[item.track.name + " by " + item.track.artists["0"].name] = item.track.uri;
+          options1.push(item.track.name + " by " + item.track.artists["0"].name);
+        });
+        this.setState({ options: options1 });
+        this.setState({ tracks: songsHash });
+        this.setState({loading: false});
+      })
+      .catch( err => {
+        console.log("Error: ");
+        console.log(err);
+      })
+
   };
+
 
   getPlaylist = () => {
     console.log("get playlist");
@@ -100,8 +129,13 @@ class RoomPage extends React.Component {
         <Segment>
           <h3> Search Your Playlists </h3>
           <SearchPlaylistForm onPlaylistSelect={this.onPlaylistSelect} />
-          {this.state.playlist_id && (
-            <PlaylistForm submit={this.getPlaylist} playlist_id={this.state.playlist_id} owner_id={this.state.owner_id} />
+          {!this.state.loading && (
+            <PlaylistForm
+              playlist_id={this.state.playlist_id}
+              owner_id={this.state.owner_id}
+              options={this.state.options}
+              tracks={this.state.tracks}
+            />
           )}
         </Segment>
 
