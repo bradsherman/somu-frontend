@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import SpotifyPlayer from 'react-spotify-player';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 import PropTypes from "prop-types";
 import SearchSongForm from '../forms/SearchSongForm';
 import SearchPlaylistForm from '../forms/SearchPlaylistForm';
@@ -52,7 +52,7 @@ class RoomPage extends React.Component {
     this.setState({ song });
     const s = store.getState();
     // add song to playlist API call
-    api.playlist.addTracksToPlaylist(s.user.spotify_id, this.state.room_playlist_id, song.uri)
+    api.playlist.addTracksToPlaylist(this.state.owner_id, this.state.room_playlist_id, song.uri)
       .then(res => {
         // this.props.history.push('/dashboard');
         // this.props.history.push('/room/'+this.state.room_playlist_id);
@@ -110,21 +110,9 @@ class RoomPage extends React.Component {
 
     return (
       <div>
-        <Segment>
-          <Grid>
-            <Grid.Row centered>
-              <h1>{this.state.name}</h1>
-            </Grid.Row>
-
-            <Grid.Row centered>
-              <p>by {this.state.owner_id}</p>
-            </Grid.Row>
-            
-            <Grid.Row centered>
-              <h4>Room ID: {this.state.room_id} (Use this to invite members to your room!)</h4>
-            </Grid.Row>
-          </Grid>
-        </Segment>
+        <h1>{this.state.name}</h1>
+        <p>by {this.state.owner_id}</p>
+        <h4>Room ID: {this.state.room_id} (Use this to invite members to your room!)</h4>
 
         <Segment>
           <h3> Room Members </h3>

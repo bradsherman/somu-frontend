@@ -48,7 +48,6 @@ class JoinRoomForm extends Component {
 
   render() {
     const { data, errors, loading } = this.state;
-    console.log(this.state);
 
     return (
       <Form onSubmit={this.onSubmit} loading={loading}>

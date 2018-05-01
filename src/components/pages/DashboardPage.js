@@ -21,7 +21,6 @@ class DashboardPage extends Component {
     const user = store.getState().user.username;
     api.room.getRooms(user)
       .then(res => {
-        console.log(res);
         this.setState({owned_rooms: res.data.owned_rooms, rooms: res.data.rooms });
       })
       .catch(err => {

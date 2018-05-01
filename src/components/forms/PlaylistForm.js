@@ -23,7 +23,7 @@ class PlaylistForm extends React.Component {
     const s = store.getState();
     var uri = this.state.tracks[data.content];
 
-    api.playlist.addTracksToPlaylist(s.user.spotify_id, this.state.room_playlist_id, uri)
+    api.playlist.addTracksToPlaylist(this.state.owner_id, this.state.room_playlist_id, uri)
       .then(res => {
         // this.props.history.push('/dashboard');
         // this.props.history.push('/room/'+this.state.room_playlist_id);
