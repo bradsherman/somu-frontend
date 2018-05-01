@@ -12,17 +12,27 @@ class PlaylistForm extends React.Component {
     playlist_id: this.props.playlist_id,
     owner_id: this.props.owner_id,
     options: this.props.options,
-    tracks: this.props.tracks
+    tracks: this.props.tracks,
+    room_playlist_id: this.props.room_playlist_id
   };
 
   addSong = (e, data) => {
-    // add song to playlist
-    // need:
-    // user id of ROOM playlist owner
-    // playlist id of ROOM
+
     console.log("add song: ");
     console.log(data.content);
-    console.log(this.state.tracks[data.content]);
+    const s = store.getState();
+    var uri = this.state.tracks[data.content];
+
+    api.playlist.addTracksToPlaylist(s.user.spotify_id, this.state.room_playlist_id, uri)
+      .then(res => {
+        // this.props.history.push('/dashboard');
+        // this.props.history.push('/room/'+this.state.room_playlist_id);
+        window.location.reload();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+
     //const song_uri = this.state.songs[data.content];
     //api.playlist.addTracksToPlaylist()
   }
@@ -51,6 +61,7 @@ PlaylistForm.propTypes = {
   playlist_id: PropTypes.string.isRequired,
   owner_id: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  room_playlist_id: PropTypes.string.isRequired
 };
 
 export default PlaylistForm;

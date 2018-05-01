@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Image } from 'semantic-ui-react';
+import { Button, Image, Segment, Grid, Icon } from 'semantic-ui-react';
 import api from '../../api';
 import store from '../../store';
 
@@ -12,6 +12,7 @@ class ProfilePage extends Component {
       displayName: '',
       spotify_username: '',
       img: '',
+      followers: ''
     }
   }
 
@@ -19,7 +20,13 @@ class ProfilePage extends Component {
   updateInfo() {
     const s = store.getState();
     api.user.getCurrentProfile(s.user.spotify_id).then(res => {
-        this.setState({ displayName: res.display_name, spotify_username: res.id, img: res.images[0].url });
+        console.log(res);
+        this.setState({
+          displayName: res.display_name,
+          spotify_username: res.id,
+          img: res.images[0].url,
+          followers: res.followers.total
+        });
       })
       .catch(err => {
         console.log(err);
@@ -32,12 +39,24 @@ class ProfilePage extends Component {
 
   render() {
     return (
-      <div>
-        <h1>My Profile</h1>
-        <h4>Spotify Username: </h4><p>{this.state.spotify_username}</p>
-        <h4>Spotify Display Name: </h4><p>{this.state.displayName}</p>
-        <Image src={this.state.img} />
-      </div>
+      <Segment>
+        <Grid columns={2} stacktable>
+          <Grid.Row >
+
+            <Grid.Column>
+              <Image size="medium" src={this.state.img} />
+            </Grid.Column>
+
+            <Grid.Column >
+              <h1>My Profile</h1>
+              <h4>Spotify Username: </h4><p>{this.state.spotify_username}</p>
+              <h4>Spotify Display Name: </h4><p>{this.state.displayName}</p>
+              <h4>Followers: </h4><p>{this.state.followers}</p>
+            </Grid.Column>
+
+          </Grid.Row>
+        </Grid>
+      </Segment>
     );
   }
 }
