@@ -26,8 +26,8 @@ class SearchPlaylistForm extends React.Component {
     this.setState({ loading: true });
     api.playlist.getPlaylists(s.user.spotify_id)
       .then( res => {
-        console.log("Result: ");
-        console.log(res);
+        // console.log("Result: ");
+        // console.log(res);
         return res.items;
       })
       .then( items => {

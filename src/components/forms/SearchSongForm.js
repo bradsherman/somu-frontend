@@ -30,8 +30,8 @@ class SearchSongForm extends React.Component {
     this.setState({ loading: true });
     api.songs.searchSongs(this.state.query)
       .then( res => {
-        console.log("Result: ");
-        console.log(res);
+        // console.log("Result: ");
+        // console.log(res);
         return res.tracks.items;
       })
       .then( items => {
