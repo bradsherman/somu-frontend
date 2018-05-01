@@ -111,6 +111,7 @@ class RoomPage extends React.Component {
     return (
       <div>
         <h1>{this.state.name}</h1>
+        <p>by {this.state.owner_id}</p>
         <h4>Room ID: {this.state.room_id} (Use this to invite members to your room!)</h4>
 
         <Segment>
