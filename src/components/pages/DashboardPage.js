@@ -45,7 +45,7 @@ class DashboardPage extends Component {
           <div>
             <Link to="/new_room"><Button className="green">Create a Room</Button></Link>
             <Link to="/join_room"><Button primary>Join a Room</Button></Link>
-            {this.state.owned_rooms && <h5>Owner</h5>}
+            {this.state.owned_rooms.length > 0 && <h5>Owner</h5>}
             {this.state.owned_rooms && this.state.owned_rooms.map(r =>
               <RoomCard
                 key={r.ROOM_ID}
