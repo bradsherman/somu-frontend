@@ -53,7 +53,7 @@ export default {
 
     joinRoom: data =>
       axios.post(api_url + "/room_member", { data })
-        .then(r =>spotifyApi.followPlaylistAsync(r.info.owner_id, r.info.playlist_id))
+        .then(r => spotifyApi.followPlaylistAsync(r.data.info.OWNER_ID, r.data.info.PLAYLIST_ID))
 
 
 

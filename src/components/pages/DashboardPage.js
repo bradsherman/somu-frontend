@@ -21,6 +21,7 @@ class DashboardPage extends Component {
     const user = store.getState().user.username;
     api.room.getRooms(user)
       .then(res => {
+        console.log(res);
         this.setState({owned_rooms: res.data.owned_rooms, rooms: res.data.rooms });
       })
       .catch(err => {
@@ -45,7 +46,7 @@ class DashboardPage extends Component {
           <div>
             <Link to="/new_room"><Button className="green">Create a Room</Button></Link>
             <Link to="/join_room"><Button primary>Join a Room</Button></Link>
-            <h5>Owner</h5>
+            {this.state.owned_rooms && <h5>Owner</h5>}
             {this.state.owned_rooms && this.state.owned_rooms.map(r =>
               <RoomCard
                 key={r.ROOM_ID}
@@ -55,8 +56,8 @@ class DashboardPage extends Component {
                 onClick={this.onClick}
               />
             )}
-            <Divider section />
-            <h5>Member</h5>
+            {this.state.owned_rooms.length > 0 && this.state.rooms.length > 0 && <Divider section />}
+            {this.state.rooms.length > 0 && <h5>Member</h5>}
             {this.state.rooms && this.state.rooms.map(r =>
               <RoomCard
                 key={r.ROOM_ID}

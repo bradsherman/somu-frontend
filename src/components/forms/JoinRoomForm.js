@@ -35,7 +35,8 @@ class JoinRoomForm extends Component {
         .submit(this.state.data)
         .catch(err => {
           console.log(err);
-          this.setState({ errors: err.response.data.errors, loading: false })});
+          this.setState({ errors: err.response.data.errors, loading: false });
+        });
     }
   };
 
@@ -47,6 +48,7 @@ class JoinRoomForm extends Component {
 
   render() {
     const { data, errors, loading } = this.state;
+    console.log(this.state);
 
     return (
       <Form onSubmit={this.onSubmit} loading={loading}>
