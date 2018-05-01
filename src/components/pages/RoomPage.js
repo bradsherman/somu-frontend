@@ -21,6 +21,7 @@ class RoomPage extends React.Component {
     song: null,
     name: "",
     owner_id: "",
+    room_owner_id: "",
     room_id: "",
     room_playlist_id: "",
     playlist_id: "",
@@ -40,7 +41,7 @@ class RoomPage extends React.Component {
       .then(res => {
         this.setState({
           name: res.data.info.NAME,
-          owner_id: res.data.info.OWNER_ID,
+          room_owner_id: res.data.info.OWNER_ID,
           room_id: res.data.info.ROOM_ID,
           members: res.data.members,
           playlist_uri: "spotify:user:"+res.data.info.OWNER_ID+":playlist:"+res.data.info.PLAYLIST_ID
@@ -52,7 +53,7 @@ class RoomPage extends React.Component {
     this.setState({ song });
     const s = store.getState();
     // add song to playlist API call
-    api.playlist.addTracksToPlaylist(this.state.owner_id, this.state.room_playlist_id, song.uri)
+    api.playlist.addTracksToPlaylist(this.state.room_owner_id, this.state.room_playlist_id, song.uri)
       .then(res => {
         // this.props.history.push('/dashboard');
         // this.props.history.push('/room/'+this.state.room_playlist_id);
@@ -111,7 +112,7 @@ class RoomPage extends React.Component {
     return (
       <div>
         <h1>{this.state.name}</h1>
-        <p>by {this.state.owner_id}</p>
+        <p>by {this.state.room_owner_id}</p>
         <h4>Room ID: {this.state.room_id} (Use this to invite members to your room!)</h4>
 
         <Segment>
@@ -121,7 +122,7 @@ class RoomPage extends React.Component {
           })}
         </Segment>
 
-        {this.state.owner_id && this.state.playlist_uri && <SpotifyPlayer
+        {this.state.room_owner_id && this.state.playlist_uri && <SpotifyPlayer
           uri={this.state.playlist_uri}
           size={size}
           view={view}
@@ -143,6 +144,7 @@ class RoomPage extends React.Component {
               options={this.state.options}
               tracks={this.state.tracks}
               room_playlist_id={this.state.room_playlist_id}
+              room_owner_id={this.state.room_owner_id}
             />
           )}
         </Segment>

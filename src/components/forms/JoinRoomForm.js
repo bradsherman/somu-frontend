@@ -70,7 +70,6 @@ class JoinRoomForm extends Component {
           {errors.room_id && <InlineError text={errors.room_id}/>}
         </Form.Field>
         <Button primary>Join</Button>
-        <Link to="/dashboard"><Button>Dashboard</Button></Link>
       </Form>
     )
   }
