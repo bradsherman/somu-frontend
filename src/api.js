@@ -6,6 +6,11 @@ import spotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = Promise.promisifyAll(new spotifyWebApi());
 // spotifyApi.setPromiseImplementation(Promise);
 spotifyApi.setAccessToken(localStorage.spotifyAccessToken);
+if (localStorage.harmonizeJWT) {
+  axios.defaults.headers.common.authorization = `Bearer ${localStorage.harmonizeJWT}`;
+} else {
+  delete axios.defaults.headers.common.authorization;
+}
 
 // brad
 let api_url = "http://35.171.74.240:3000";
