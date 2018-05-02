@@ -27,8 +27,7 @@ class UserRoute extends React.Component {
       localStorage.spotifyRefreshToken = this.parsed.refresh_token;
       localStorage.spotifyId = this.parsed.spotify_id;
       dispatch(spotifyUserLoggedIn(this.parsed));
-    } else {
-      // window.location.assign("http://52.4.91.6:3000/spotify/auth/login");
+    } else if (localStorage.harmonizeJWT) {
       window.location.assign(api.api_url+"/spotify/auth/login");
     }
   }
