@@ -37,7 +37,13 @@ export default {
       axios.get(base + "/v1/users/" + spotify_user_id).then(res => {
         console.log(res);
         return res;
-      })
+      }),
+
+    getDevices: () =>
+      spotifyApi.getMyDevicesAsync(),
+
+    play: (id, uri) =>
+      spotifyApi.playAsync({ device_id: id, context_uri: uri })
 
   },
 
@@ -81,6 +87,9 @@ export default {
 
     getPlaylist: (spotify_user_id, playlist_id) =>
       spotifyApi.getPlaylistAsync(spotify_user_id, playlist_id),
+
+    getPlaylistTracks: (spotify_user_id, playlist_id) =>
+      spotifyApi.getPlaylistTracksAsync(spotify_user_id, playlist_id),
 
     addTracksToPlaylist: (spotify_user_id, playlist_id, song_uri) =>
       spotifyApi.addTracksToPlaylistAsync(spotify_user_id, playlist_id, [song_uri]),
