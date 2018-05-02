@@ -33,6 +33,9 @@ export default {
         console.log(res);
         return res.data.user}),
 
+    refreshToken: token =>
+      axios.post(api_url+"/spotify/auth/refresh", { token }),
+
     // returns json object 'user' (private)
     getCurrentProfile: user_id =>
       spotifyApi.getUserAsync(user_id),

@@ -37,3 +37,8 @@ export const confirm = token => dispatch =>
     localStorage.harmonizeJWT = user.token;
     dispatch(userLoggedIn(user));
   });
+
+export const refreshSpotifyToken = (token) => dispatch => {
+  localStorage.accessToken = token;
+  dispatch(spotifyTokenRefreshed(token));
+}

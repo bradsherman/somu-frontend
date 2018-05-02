@@ -1,4 +1,4 @@
-import { USER_LOGGED_IN, USER_LOGGED_OUT, SPOTIFY_USER_LOGGED_IN } from '../types';
+import { USER_LOGGED_IN, USER_LOGGED_OUT, SPOTIFY_USER_LOGGED_IN, SPOTIFY_TOKEN_REFRESHED } from '../types';
 
 export default function user(state = {}, action = {}) {
   switch(action.type) {
@@ -8,6 +8,8 @@ export default function user(state = {}, action = {}) {
       return {};
     case SPOTIFY_USER_LOGGED_IN:
       return {...state, ...action.user};
+    case SPOTIFY_TOKEN_REFRESHED:
+      return {...state, user: { access_token: action.token }};
     default: return state;
   }
 }

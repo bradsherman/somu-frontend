@@ -26,6 +26,8 @@ class UserRoute extends React.Component {
       localStorage.spotifyAccessToken = this.parsed.access_token;
       localStorage.spotifyRefreshToken = this.parsed.refresh_token;
       localStorage.spotifyId = this.parsed.spotify_id;
+      var d = new Date();
+      localStorage.tokenTime = d.getTime();
       dispatch(spotifyUserLoggedIn(this.parsed));
     } else if (localStorage.harmonizeJWT) {
       window.location.assign(api.api_url+"/spotify/auth/login");
