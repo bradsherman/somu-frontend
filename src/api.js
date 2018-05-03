@@ -17,7 +17,7 @@ let host = "http://35.171.74.240";
 // courtney
 //  let api_url = "http://34.193.174.233";
 if (process.env.NODE_ENV === "production") {
-  host = "http://52.4.91.6:3000";
+  host = "http://52.4.91.6";
 }
 
 let api_url = host+":3000";
