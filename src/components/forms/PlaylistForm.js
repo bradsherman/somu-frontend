@@ -33,23 +33,19 @@ class PlaylistForm extends React.Component {
     console.log("add song: ");
     console.log(data.content);
     const s = store.getState();
-    var uri = this.state.tracks[data.content];
+    var id = this.state.tracks[data.content].split(":")[2];
     console.log(this.state);
 
-    api.songs.getSong(uri)
+    api.songs.getSong(id)
       .then(res => {
         console.log(res);
         this.state.onSongSelect(res);
+        this.setState({ options: [] });
+      })
+      .catch(err => {
+        console.log(err);
       });
 
-    // api.playlist.addTracksToPlaylist(this.state.room_owner_id, this.state.room_playlist_id, uri)
-    //   .then(res => {
-    //     this.state.getTracks();
-    //     this.setState({ options: null });
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   })
   }
 
   sendSongRequestFromPlaylist(e, data) {
@@ -57,6 +53,7 @@ class PlaylistForm extends React.Component {
     api.songs.getSong(id)
       .then(s => {
         this.state.sendSongRequest(s);
+        this.setState({ options: [] });
       });
   }
 
@@ -64,7 +61,7 @@ class PlaylistForm extends React.Component {
 
     return (
       <div>
-        {this.state.options &&
+        {this.state.options.length > 0 &&
         <Segment>
           <Form>
             <List

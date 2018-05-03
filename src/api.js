@@ -13,7 +13,7 @@ if (localStorage.harmonizeJWT) {
 }
 
 // brad
-let host = "http://35.171.74.240";
+let host = "https://35.171.74.240";
 // courtney
 //  let api_url = "http://34.193.174.233";
 if (process.env.NODE_ENV === "production") {
@@ -111,6 +111,9 @@ export default {
     getPlaylistTracks: (spotify_user_id, playlist_id) =>
       spotifyApi.getPlaylistTracksAsync(spotify_user_id, playlist_id),
 
+    removeTrack: (spotify_user_id, playlist_id, pos, snapshot) =>
+      spotifyApi.removeTracksFromPlaylistInPositionsAsync(spotify_user_id, playlist_id, [pos], snapshot),
+
     addTracksToPlaylist: (spotify_user_id, playlist_id, song_uri) =>
       spotifyApi.addTracksToPlaylistAsync(spotify_user_id, playlist_id, [song_uri]),
 
@@ -123,10 +126,10 @@ export default {
       }),
 
     getSong: id =>
-      spotifyApi.getTrack(id),
+      spotifyApi.getTrackAsync(id),
 
     seek: position =>
-      spotifyApi.seek(position)
+      spotifyApi.seekAsync(position)
 
   },
 
