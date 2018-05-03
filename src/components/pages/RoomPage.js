@@ -295,9 +295,9 @@ class RoomPage extends React.Component {
                 (
                   <div>
                   <h3>Now Playing</h3>
-                  <p>Artist: {this.state.artistName}</p>
-                  <p>Track: {this.state.trackName}</p>
-                  <p>Album: {this.state.albumName}</p>
+                  <p>{this.state.artistName}</p>
+                  <p>{this.state.trackName}</p>
+                  <p>{this.state.albumName}</p>
                   <p>
                     <Button icon onClick={() => this.onPrevClick()}><Icon name="left arrow"/></Button>
                     <Button icon onClick={() => this.onPlayClick()}>{this.state.playing ? <Icon name="pause"/> : <Icon name="play"/>}</Button>
