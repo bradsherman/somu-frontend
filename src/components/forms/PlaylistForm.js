@@ -24,7 +24,8 @@ class PlaylistForm extends React.Component {
     room_owner_id: this.props.room_owner_id,
     isOwner: this.props.isOwner,
     sendSongRequest: this.props.sendSongRequest,
-    getTracks: this.props.getTracks
+    getTracks: this.props.getTracks,
+    onSongSelect: this.props.onSongSelect
   };
 
   addSong = (e, data) => {
@@ -35,14 +36,20 @@ class PlaylistForm extends React.Component {
     var uri = this.state.tracks[data.content];
     console.log(this.state);
 
-    api.playlist.addTracksToPlaylist(this.state.room_owner_id, this.state.room_playlist_id, uri)
+    api.songs.getSong(uri)
       .then(res => {
-        this.state.getTracks();
-        this.setState({ options: null});
-      })
-      .catch(err => {
-        console.log(err);
-      })
+        console.log(res);
+        this.state.onSongSelect(res);
+      });
+
+    // api.playlist.addTracksToPlaylist(this.state.room_owner_id, this.state.room_playlist_id, uri)
+    //   .then(res => {
+    //     this.state.getTracks();
+    //     this.setState({ options: null });
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   })
   }
 
   sendSongRequestFromPlaylist(e, data) {
@@ -85,7 +92,8 @@ PlaylistForm.propTypes = {
   room_owner_id: PropTypes.string.isRequired,
   isOwner: PropTypes.bool.isRequired,
   sendSongRequest: PropTypes.func.isRequired,
-  getTracks: PropTypes.func.isRequired
+  getTracks: PropTypes.func.isRequired,
+  onSongSelect: PropTypes.func.isRequired
 };
 
 export default PlaylistForm;

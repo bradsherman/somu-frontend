@@ -32,8 +32,8 @@ class ProfilePage extends Component {
     .then(() => {
       api.user.getTopTracks()
         .then(res => {
-          const tracks = res.items.map(t => {
-            return t.name + " by " + t.artists.map(a => a.name).join(", ");
+          const tracks = res.items.map((t, i) => {
+            return i+1 + ". " + t.name + " by " + t.artists.map(a => a.name).join(", ");
           })
           this.setState({ top_tracks: tracks });
         })
@@ -41,7 +41,7 @@ class ProfilePage extends Component {
           api.user.getTopArtists()
             .then(res => {
               console.log(res);
-              const artists = res.items.map(a => a.name)
+              const artists = res.items.map((a, i) => i+1 + ". " + a.name)
               this.setState({ top_artists: artists })
             })
         })
@@ -74,18 +74,16 @@ class ProfilePage extends Component {
 
           </Grid.Row>
           <Divider section></Divider>
-          <Grid.Row textAlign="center">
+          <Grid.Row>
             <Grid.Column>
               <h3>My Top Songs</h3>
               <List
-                animated
                 items={this.state.top_tracks}
               />
             </Grid.Column>
             <Grid.Column>
               <h3>My Top Artists</h3>
               <List
-                animated
                 items={this.state.top_artists}
               />
             </Grid.Column>

@@ -38,6 +38,7 @@ export const logout = () => dispatch => {
   localStorage.removeItem("spotifyAccessToken");
   localStorage.removeItem("spotifyRefreshToken");
   localStorage.removeItem("spotifyId");
+  localStorage.removeItem("tokenTime");
   dispatch(userLoggedOut());
 };
 

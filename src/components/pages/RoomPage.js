@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button, Icon, Segment, Image, Progress, List, Grid, Divider, Container } from 'semantic-ui-react';
+import { Button, Icon, Segment, Image, List, Grid, Divider, Container } from 'semantic-ui-react';
 import SpotifyPlayer from 'react-spotify-player';
 import PropTypes from "prop-types";
 import openSocket from "socket.io-client";
@@ -43,6 +43,7 @@ class RoomPage extends React.Component {
     trackName: "Track Name",
     artistName: "Artist Name",
     albumName: "Album Name",
+    currentUri: "",
     playing: false,
     position: 0,
     duration: 0,
@@ -109,13 +110,13 @@ class RoomPage extends React.Component {
     // add song to playlist API call
     api.playlist.addTracksToPlaylist(this.state.room_owner_id, this.state.room_playlist_id, song.uri)
       .then(res => {
-        // window.location.reload();
         this.getPlaylistTracks();
+        // can't do this yet, have to seek with playlist owner's account
+        // if (this.state.connected) this.updatePlayer();
       })
       .catch(err => {
         console.log(err);
       })
-    // song.uri
   };
 
   onPlaylistSelect = playlist => {
@@ -146,15 +147,11 @@ class RoomPage extends React.Component {
 
   };
 
-
-  getPlaylist = () => {
-    console.log("get playlist");
-  };
   createEventHandlers() {
-    this.player.on('initialization_error', e => { console.error(e); });
-    this.player.on('authentication_error', e => { console.error(e); });
-    this.player.on('account_error', e => { console.error(e); });
-    this.player.on('playback_error', e => { console.error(e); });
+    this.player.on('initialization_error', e => { console.error('INITIALIZATION ERROR'); console.error(e); });
+    this.player.on('authentication_error', e => { console.error('AUTHENTICATION ERROR'); console.error(e); });
+    this.player.on('account_error', e => { console.error('ACCOUNT ERROR'); console.error(e); });
+    this.player.on('playback_error', e => { console.error('PLAYBACK ERROR'); console.error(e); });
 
     // Playback status updates
     this.player.on('player_state_changed', state => { this.onStateChanged(state); });
@@ -166,7 +163,6 @@ class RoomPage extends React.Component {
       this.setState({ deviceId: device_id });
     });
   }
-
 
   checkForPlayer() {
     const s = store.getState();
@@ -185,22 +181,26 @@ class RoomPage extends React.Component {
   onStateChanged(state) {
     if (state !== null) {
       const {
-        current_track: currentTrack,
         position,
         duration
-      } = state.track_window;
+      } = state;
+      const { current_track: currentTrack } = state.track_window;
+      console.log(state);
       const trackName = currentTrack.name;
       const artistName = currentTrack.artists
         .map(artist => artist.name)
         .join(", ");
       const albumName = currentTrack.album.name;
+      const currentUri = currentTrack.uri;
       const playing = !state.paused;
+      console.log(position, duration);
       this.setState({
         position,
         duration,
         trackName,
         albumName,
         artistName,
+        currentUri,
         playing
       });
     }
@@ -216,6 +216,27 @@ class RoomPage extends React.Component {
 
   onNextClick() {
     this.player.nextTrack();
+  }
+
+  updatePlayer() {
+    const { deviceId, playlist_uri, position, currentUri } = this.state;
+    console.log('IN UPDATE PLAYER');
+    api.user.playSongOnPlaylist(deviceId, playlist_uri, currentUri)
+      .then(res => {
+          console.log("OFFSET");
+          console.log(res);
+        api.user.seek(position)
+          .then(r => {
+            console.log("DONE SEEKING");
+            console.log(r);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   connectToPlaylist() {
@@ -259,23 +280,6 @@ class RoomPage extends React.Component {
 
   render() {
 
-    // size may also be a plain string using the presets 'large' or 'compact'
-    const size = {
-      width: '100%',
-      height: 300,
-    };
-    const view = 'list'; // or 'coverart'
-    const theme = 'black'; // or 'white'
-        // {this.state.room_owner_id && this.state.playlist_uri && <SpotifyPlayer
-        //   uri={this.state.playlist_uri}
-        //   size={size}
-        //   view={view}
-        //   theme={theme}
-        // />}
-            // <Link to="/"><Button primary>Home</Button></Link>
-
-            // <Progress data-percent={this.state.position/this.state.duration}/>
-
     return (
       <div>
         <Container textAlign='center'>
@@ -295,13 +299,12 @@ class RoomPage extends React.Component {
                 (
                   <div>
                   <h3>Now Playing</h3>
-                  <p>{this.state.artistName}</p>
-                  <p>{this.state.trackName}</p>
+                  <p>{this.state.trackName} by {this.state.artistName}</p>
                   <p>{this.state.albumName}</p>
                   <p>
-                    <Button icon onClick={() => this.onPrevClick()}><Icon name="left arrow"/></Button>
-                    <Button icon onClick={() => this.onPlayClick()}>{this.state.playing ? <Icon name="pause"/> : <Icon name="play"/>}</Button>
-                    <Button icon onClick={() => this.onNextClick()}><Icon name="right arrow"/></Button>
+                    <Button size='tiny' icon onClick={() => this.onPrevClick()}><Icon name="left arrow"/></Button>
+                    <Button size='tiny' icon onClick={() => this.onPlayClick()}>{this.state.playing ? <Icon name="pause"/> : <Icon name="play"/>}</Button>
+                    <Button size='tiny' icon onClick={() => this.onNextClick()}><Icon name="right arrow"/></Button>
                   </p>
                 </div>
                 )
@@ -349,7 +352,7 @@ class RoomPage extends React.Component {
               <Grid.Column>
                 <h3> Search Your Playlists </h3>
                 <SearchPlaylistForm onPlaylistSelect={this.onPlaylistSelect} />
-                {!this.state.loading && (
+                {!this.state.loading && this.state.options.length > 0 && (
                   <PlaylistForm
                     playlist_id={this.state.playlist_id}
                     owner_id={this.state.owner_id}
@@ -360,6 +363,7 @@ class RoomPage extends React.Component {
                     isOwner={this.state.isOwner}
                     sendSongRequest={this.sendSongRequest}
                     getTracks={this.getPlaylistTracks}
+                    onSongSelect={this.onSongSelect}
                   />
                 )}
               </Grid.Column>

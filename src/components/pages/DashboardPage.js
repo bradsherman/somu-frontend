@@ -69,21 +69,11 @@ class DashboardPage extends Component {
 
   onClick(e, data) {
     e.preventDefault();
-    console.log(data)
     this.props.history.push('/room/'+data.playlist_id);
 
   }
 
   render() {
-            // {this.state.owned_rooms && this.state.owned_rooms.map(r =>
-            //   <RoomCard
-            //     key={r.ROOM_ID}
-            //     name={r.NAME}
-            //     owner={r.OWNER_ID}
-            //     playlist_id={r.PLAYLIST_ID}
-            //     onClick={this.onClick}
-            //   />
-            // )}
     return (
       <div style={{textAlign: 'center'}}>
         <h1>My Rooms</h1>

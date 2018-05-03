@@ -58,7 +58,9 @@ export default {
       spotifyApi.getMyTopArtistsAsync(),
 
     play: (id, uri) =>
-      spotifyApi.playAsync({ device_id: id, context_uri: uri })
+      spotifyApi.playAsync({ device_id: id, context_uri: uri }),
+
+    playSongOnPlaylist: (id, uri, song) => spotifyApi.playAsync({ device_id: id, context_uri: uri, offset: { "uri": song }}),
 
   },
 
@@ -121,7 +123,10 @@ export default {
       }),
 
     getSong: id =>
-      spotifyApi.getTrack(id)
+      spotifyApi.getTrack(id),
+
+    seek: position =>
+      spotifyApi.seek(position)
 
   },
 
