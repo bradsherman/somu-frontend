@@ -6,7 +6,10 @@ import api from '../../api';
 class JoinRoomPage extends Component {
 
   submit = data =>
-    api.room.joinRoom(data).then(() => this.props.history.push('/dashboard'));
+    api.room.joinRoom(data).then(playlist_id => {
+      console.log(playlist_id);
+      return this.props.history.push('/room/'+playlist_id)
+    });
 
 
   render() {

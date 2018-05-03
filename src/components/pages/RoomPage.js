@@ -4,18 +4,23 @@ import { Link } from 'react-router-dom';
 import { Button, Icon, Segment, Image, Progress, List } from 'semantic-ui-react';
 import SpotifyPlayer from 'react-spotify-player';
 import PropTypes from "prop-types";
+import openSocket from "socket.io-client";
 import SearchSongForm from '../forms/SearchSongForm';
 import SearchPlaylistForm from '../forms/SearchPlaylistForm';
 import PlaylistForm from '../forms/PlaylistForm';
 import api from '../../api';
 import store from '../../store';
 
-
 class RoomPage extends React.Component {
 
   constructor(props) {
     super(props);
     this.playerCheckInterval = null;
+    this.socket = openSocket(api.socket_url);
+    this.sendSongRequest = this.sendSongRequest.bind(this);
+    this.subscribeToSongRequest = this.subscribeToSongRequest.bind(this);
+    this.handleSongRequest = this.handleSongRequest.bind(this);
+    this.getPlaylistTracks = this.getPlaylistTracks.bind(this);
   };
 
   state = {
@@ -23,6 +28,7 @@ class RoomPage extends React.Component {
     name: "",
     owner_id: "",
     room_owner_id: "",
+    isOwner: false,
     room_id: "",
     room_playlist_id: "",
     room_tracks: [],
@@ -47,39 +53,43 @@ class RoomPage extends React.Component {
     this.playerCheckInterval = setInterval(() => this.checkForPlayer(), 1000);
   }
 
-  waitForSpotifyWebPlaybackSDKToLoad () {
-    return new Promise(resolve => {
-      if (window.Spotify) {
-        resolve(window.Spotify);
-      } else {
-        window.onSpotifyWebPlaybackSDKReady = () => {
-          resolve(window.Spotify);
-        };
-      }
-    });
-  };
+  getPlaylistTracks() {
+    api.playlist.getPlaylistTracks(this.state.room_owner_id, this.state.room_playlist_id)
+      .then(res => {
+        this.setState({ room_tracks: res.items.map(i => i.track)});
+        // if (this.state.isOwner) this.subscribeToSongRequest();
+        // this.subscribeToSongRequest();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
   componentDidMount() {
+    const s = store.getState();
     api.room.getRoom(this.state.room_playlist_id)
       .then(res => {
         this.setState({
           name: res.data.info.NAME,
           room_owner_id: res.data.info.OWNER_ID,
           room_id: res.data.info.ROOM_ID,
+          isOwner: res.data.info.OWNER_ID === s.user.spotify_id,
           members: res.data.members,
           playlist_uri: "spotify:user:"+res.data.info.OWNER_ID+":playlist:"+res.data.info.PLAYLIST_ID
         });
         return;
       })
       .then(() => {
-        api.playlist.getPlaylistTracks(this.state.room_owner_id, this.state.room_playlist_id)
-          .then(res => {
-            console.log(res.items.map(i => i.track));
-            this.setState({ room_tracks: res.items.map(i => i.track)});
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        // api.playlist.getPlaylistTracks(this.state.room_owner_id, this.state.room_playlist_id)
+        //   .then(res => {
+        //     this.setState({ room_tracks: res.items.map(i => i.track)});
+        this.getPlaylistTracks();
+        if (this.state.isOwner) this.subscribeToSongRequest();
+        // this.subscribeToSongRequest();
+          // })
+          // .catch(err => {
+          //   console.log(err);
+          // });
       });
 
 
@@ -91,9 +101,8 @@ class RoomPage extends React.Component {
     // add song to playlist API call
     api.playlist.addTracksToPlaylist(this.state.room_owner_id, this.state.room_playlist_id, song.uri)
       .then(res => {
-        // this.props.history.push('/dashboard');
-        // this.props.history.push('/room/'+this.state.room_playlist_id);
-        window.location.reload();
+        // window.location.reload();
+        this.getPlaylistTracks();
       })
       .catch(err => {
         console.log(err);
@@ -215,6 +224,30 @@ class RoomPage extends React.Component {
     }
   }
 
+  subscribeToSongRequest() {
+    console.log('SUBSCRIBED');
+    this.socket.on('song_requested', request => {
+      console.log('GOT A SONG REQUEST');
+      console.log(request);
+      this.handleSongRequest(request);
+    });
+  }
+
+  handleSongRequest(request) {
+    this.onSongSelect(request.song);
+  }
+
+  sendSongRequest(song) {
+    // add user data here so we know who requested it
+    console.log('REQUESTED A SONG');
+    console.log(song);
+    const s = store.getState();
+    const name = s.user.first_name + " " + s.user.last_name;
+    const username = s.user.username;
+    this.socket.emit('song_request', { name, username, song });
+    this.getPlaylistTracks();
+  }
+
   render() {
 
     // size may also be a plain string using the presets 'large' or 'compact'
@@ -295,7 +328,7 @@ class RoomPage extends React.Component {
         <Segment.Group horizontal>
         <Segment>
           <h3>Add New Song to Your Room</h3>
-          <SearchSongForm onSongSelect={this.onSongSelect} />
+          <SearchSongForm onSongSelect={this.state.isOwner ? this.onSongSelect : this.sendSongRequest} />
         </Segment>
 
         <Segment>
@@ -309,6 +342,8 @@ class RoomPage extends React.Component {
               tracks={this.state.tracks}
               room_playlist_id={this.state.room_playlist_id}
               room_owner_id={this.state.room_owner_id}
+              isOwner={this.state.isOwner}
+              sendSongRequest={this.sendSongRequest}
             />
           )}
         </Segment>

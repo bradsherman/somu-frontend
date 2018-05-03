@@ -22,7 +22,7 @@ if (localStorage.harmonizeJWT && !store.getState().user.harmonizeJWT) {
   store.dispatch(userLoggedIn(user));
 };
 
-if (localStorage.refreshToken && new Date.getTime() - localStorage.tokenTime > 3500000) {
+if (localStorage.refreshToken && new Date.getTime() - localStorage.tokenTime > 2700000) {
   api.user.refreshToken(localStorage.spotifyRefreshToken)
     .then(res => {
       // set spotifyApi access token

@@ -9,9 +9,8 @@ class NewRoomPage extends Component {
     api.playlist.createPlaylist(data)
       .then((res) => {
         return api.room.createRoom(data, res.id)
-          .then(res => {
-            // this.props.history.push("/dashboard")
-            return this.props.history.push("/dashboard");
+          .then(() => {
+            return this.props.history.push("/room/"+res.id);
           })
           .catch(err => {
             console.log(err);

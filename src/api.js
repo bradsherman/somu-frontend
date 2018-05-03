@@ -13,15 +13,16 @@ if (localStorage.harmonizeJWT) {
 }
 
 // brad
-let api_url = "http://35.171.74.240:3000";
+let host = "http://35.171.74.240";
 // courtney
-//  let api_url = "http://34.193.174.233:3000";
-
-
-// Spotify base url
+//  let api_url = "http://34.193.174.233";
 if (process.env.NODE_ENV === "production") {
-  api_url = "http://52.4.91.6:3000";
+  host = "http://52.4.91.6:3000";
 }
+
+let api_url = host+":3000";
+let socket_url = host+":3002";
+
 
 export default {
   user: {
@@ -67,7 +68,10 @@ export default {
 
     joinRoom: data =>
       axios.post(api_url + "/room_member", { data })
-        .then(r => spotifyApi.followPlaylistAsync(r.data.info.OWNER_ID, r.data.info.PLAYLIST_ID))
+        .then(r => {
+          return spotifyApi.followPlaylistAsync(r.data.info.OWNER_ID, r.data.info.PLAYLIST_ID)
+            .then(() => r.data.info.PLAYLIST_ID)
+        })
 
 
 
@@ -108,11 +112,15 @@ export default {
     searchSongs: query =>
       spotifyApi.searchTracksAsync(query, {
         limit: 10
-      })
+      }),
+
+    getSong: id =>
+      spotifyApi.getTrack(id)
 
   },
 
   api_url,
+  socket_url,
   spotifyApi
 
 
