@@ -57,6 +57,9 @@ class SearchPlaylistForm extends React.Component {
           search
           fluid
           placeholder = "select a playlist"
+          selection
+          upward
+          closeOnChange
           options={this.state.options}
           loading={this.state.loading}
           onClick={this.onClick}

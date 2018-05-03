@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button, Icon, Segment, Image, Progress, List } from 'semantic-ui-react';
+import { Button, Icon, Segment, Image, Progress, List, Grid, Divider, Container } from 'semantic-ui-react';
 import SpotifyPlayer from 'react-spotify-player';
 import PropTypes from "prop-types";
 import openSocket from "socket.io-client";
@@ -45,7 +45,8 @@ class RoomPage extends React.Component {
     albumName: "Album Name",
     playing: false,
     position: 0,
-    duration: 0
+    duration: 0,
+    connected: false
   };
 
   componentWillMount() {
@@ -56,9 +57,24 @@ class RoomPage extends React.Component {
   getPlaylistTracks() {
     api.playlist.getPlaylistTracks(this.state.room_owner_id, this.state.room_playlist_id)
       .then(res => {
-        this.setState({ room_tracks: res.items.map(i => i.track)});
-        // if (this.state.isOwner) this.subscribeToSongRequest();
-        // this.subscribeToSongRequest();
+        let tracks = [];
+        tracks = res.items.map(t =>{
+          let artists = t.track.artists.map(a => a.name).join(", ");
+          return (
+          <List.Item key={t.track.id}>
+            <Image src={t.track.album.images[2].url} inline circular size='mini'/>
+            <List.Content>
+              <List.Header>
+                {t.track.name}
+              </List.Header>
+              <List.Description>
+                {artists}
+              </List.Description>
+            </List.Content>
+          </List.Item>
+          )
+        })
+        this.setState({ room_tracks: tracks });
       })
       .catch(err => {
         console.log(err);
@@ -80,16 +96,8 @@ class RoomPage extends React.Component {
         return;
       })
       .then(() => {
-        // api.playlist.getPlaylistTracks(this.state.room_owner_id, this.state.room_playlist_id)
-        //   .then(res => {
-        //     this.setState({ room_tracks: res.items.map(i => i.track)});
         this.getPlaylistTracks();
         if (this.state.isOwner) this.subscribeToSongRequest();
-        // this.subscribeToSongRequest();
-          // })
-          // .catch(err => {
-          //   console.log(err);
-          // });
       });
 
 
@@ -215,6 +223,7 @@ class RoomPage extends React.Component {
       api.user.play(this.state.deviceId, this.state.playlist_uri)
         .then(res => {
           console.log(res);
+          this.setState({ connected: true });
           return;
         })
         .catch(err => {
@@ -269,85 +278,93 @@ class RoomPage extends React.Component {
 
     return (
       <div>
-        <h1>{this.state.name}</h1>
-        <p>by {this.state.room_owner_id}</p>
-        <h4>Room ID: {this.state.room_id} (Use this to invite members to your room!)</h4>
-        <Button primary onClick={() => this.connectToPlaylist()}>Start listening!</Button>
+        <Container textAlign='center'>
+          <h1>{this.state.name}</h1>
+          <p>by {this.state.room_owner_id}</p>
+          <h4>Room ID: {this.state.room_id} (Use this to invite members to your room!)</h4>
+          {this.state.deviceId && !this.state.connected &&
+            <Button primary onClick={() => this.connectToPlaylist()}>Start listening!</Button>}
+        </Container>
 
-        <Segment>
-        <h3>Now Playing</h3>
-        {this.state.deviceId ?
-          (
-            <div>
-            <p>Artist: {this.state.artistName}</p>
-            <p>Track: {this.state.trackName}</p>
-            <p>Album: {this.state.albumName}</p>
-            <p>
-              <Button icon onClick={() => this.onPrevClick()}><Icon name="left arrow"/></Button>
-              <Button icon onClick={() => this.onPlayClick()}>{this.state.playing ? <Icon name="pause"/> : <Icon name="play"/>}</Button>
-              <Button icon onClick={() => this.onNextClick()}><Icon name="right arrow"/></Button>
-            </p>
-           </div>
-          )
-          :
-          (<div>
-            <p>Waiting for player to connect...</p>
-           </div>)
-        }
-        </Segment>
+        <Divider></Divider>
 
-        <Segment.Group horizontal>
-        <Segment>
-        <h4>Tracks</h4>
-        <Segment.Group>
-        {
-          this.state.room_tracks.map(t =>{
-            return (
-            <div key={t.id}>
-            <Segment>
-              <div>
-                <Image inline circular src={t.album.images[2].url} /><p>{t.name}</p>
-              </div>
-            </Segment>
-            </div>
-            )
-          })
-        }
-        </Segment.Group>
-        </Segment>
+        <Grid columns='equal'>
+          <Grid.Row textAlign='center'>
+            <Grid.Column>
+              {this.state.deviceId ?
+                (
+                  <div>
+                  <h3>Now Playing</h3>
+                  <p>Artist: {this.state.artistName}</p>
+                  <p>Track: {this.state.trackName}</p>
+                  <p>Album: {this.state.albumName}</p>
+                  <p>
+                    <Button icon onClick={() => this.onPrevClick()}><Icon name="left arrow"/></Button>
+                    <Button icon onClick={() => this.onPlayClick()}>{this.state.playing ? <Icon name="pause"/> : <Icon name="play"/>}</Button>
+                    <Button icon onClick={() => this.onNextClick()}><Icon name="right arrow"/></Button>
+                  </p>
+                </div>
+                )
+                :
+                (<div>
+                  <p>Waiting for player to connect...</p>
+                </div>)
+              }
+            </Grid.Column>
+            <Grid.Column>
+              <p>Rating system coming soon...</p>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
-        <Segment>
-          <h3> Room Members </h3>
-          {this.state.members.map(m => {
-            return (<p key={m.USER_ID}>{m.FIRST_NAME} {m.LAST_NAME} ({m.USERNAME})</p>)
-          })}
-        </Segment>
-        </Segment.Group>
+        <Divider></Divider>
 
+        <Grid columns='equal'>
+          <Grid.Row>
+              <Grid.Column>
+                <h3>Tracks</h3>
+                <List
+                  animated
+                  selection
+                  items={this.state.room_tracks}
+                />
+              </Grid.Column>
+              <Grid.Column textAlign='center'>
+                <h3> Room Members </h3>
+                {this.state.members.map(m => {
+                  return (<p key={m.USER_ID}>{m.FIRST_NAME} {m.LAST_NAME} ({m.USERNAME})</p>)
+                })}
+              </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
-        <Segment.Group horizontal>
-        <Segment>
-          <h3>Add New Song to Your Room</h3>
-          <SearchSongForm onSongSelect={this.state.isOwner ? this.onSongSelect : this.sendSongRequest} />
-        </Segment>
+        <Divider></Divider>
 
-        <Segment>
-          <h3> Search Your Playlists </h3>
-          <SearchPlaylistForm onPlaylistSelect={this.onPlaylistSelect} />
-          {!this.state.loading && (
-            <PlaylistForm
-              playlist_id={this.state.playlist_id}
-              owner_id={this.state.owner_id}
-              options={this.state.options}
-              tracks={this.state.tracks}
-              room_playlist_id={this.state.room_playlist_id}
-              room_owner_id={this.state.room_owner_id}
-              isOwner={this.state.isOwner}
-              sendSongRequest={this.sendSongRequest}
-            />
-          )}
-        </Segment>
-        </Segment.Group>
+        <Grid columns='equal'>
+          <Grid.Row>
+              <Grid.Column>
+                <h3>Add New Song to Your Room</h3>
+                <SearchSongForm onSongSelect={this.state.isOwner ? this.onSongSelect : this.sendSongRequest} />
+              </Grid.Column>
+              <Grid.Column>
+                <h3> Search Your Playlists </h3>
+                <SearchPlaylistForm onPlaylistSelect={this.onPlaylistSelect} />
+                {!this.state.loading && (
+                  <PlaylistForm
+                    playlist_id={this.state.playlist_id}
+                    owner_id={this.state.owner_id}
+                    options={this.state.options}
+                    tracks={this.state.tracks}
+                    room_playlist_id={this.state.room_playlist_id}
+                    room_owner_id={this.state.room_owner_id}
+                    isOwner={this.state.isOwner}
+                    sendSongRequest={this.sendSongRequest}
+                    getTracks={this.getPlaylistTracks}
+                  />
+                )}
+              </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
       </div>
 

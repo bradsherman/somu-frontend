@@ -6,10 +6,9 @@ import store from './store';
 import decode from 'jwt-decode';
 import "semantic-ui-css/semantic.min.css";
 import App from './App';
-import { userLoggedIn } from './actions/auth';
+import { userLoggedIn, spotifyTokenRefreshed } from './actions/auth';
 import api from './api';
 
-// const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 if (localStorage.harmonizeJWT && !store.getState().user.harmonizeJWT) {
   const payload = decode(localStorage.harmonizeJWT);
   const user = {
@@ -22,12 +21,12 @@ if (localStorage.harmonizeJWT && !store.getState().user.harmonizeJWT) {
   store.dispatch(userLoggedIn(user));
 };
 
-if (localStorage.refreshToken && new Date.getTime() - localStorage.tokenTime > 2700000) {
+if (localStorage.spotifyRefreshToken && new Date().getTime() - localStorage.tokenTime > 2700000) {
+  console.log("TOKEN EXPIRED");
   api.user.refreshToken(localStorage.spotifyRefreshToken)
     .then(res => {
       // set spotifyApi access token
-      api.spotifyApi.setAccessToken(res.data.access_token);
-      localStorage.spotifyAccessToken = res.data.access_token;
+      store.dispatch(spotifyTokenRefreshed(res.data.access_token));
     });
 }
 

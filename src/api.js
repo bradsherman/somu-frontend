@@ -51,6 +51,12 @@ export default {
     getDevices: () =>
       spotifyApi.getMyDevicesAsync(),
 
+    getTopTracks: () =>
+      spotifyApi.getMyTopTracksAsync(),
+
+    getTopArtists: () =>
+      spotifyApi.getMyTopArtistsAsync(),
+
     play: (id, uri) =>
       spotifyApi.playAsync({ device_id: id, context_uri: uri })
 

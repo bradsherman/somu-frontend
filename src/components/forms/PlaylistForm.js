@@ -4,6 +4,7 @@ import { Segment, Form, Button, List } from "semantic-ui-react";
 import InlineError from "../messages/InlineError";
 import store from '../../store';
 import api from "../../api";
+import { timingSafeEqual } from "crypto";
 
 
 class PlaylistForm extends React.Component {
@@ -22,7 +23,8 @@ class PlaylistForm extends React.Component {
     room_playlist_id: this.props.room_playlist_id,
     room_owner_id: this.props.room_owner_id,
     isOwner: this.props.isOwner,
-    sendSongRequest: this.props.sendSongRequest
+    sendSongRequest: this.props.sendSongRequest,
+    getTracks: this.props.getTracks
   };
 
   addSong = (e, data) => {
@@ -35,7 +37,8 @@ class PlaylistForm extends React.Component {
 
     api.playlist.addTracksToPlaylist(this.state.room_owner_id, this.state.room_playlist_id, uri)
       .then(res => {
-        window.location.reload();
+        this.state.getTracks();
+        this.setState({ options: null});
       })
       .catch(err => {
         console.log(err);
@@ -53,17 +56,21 @@ class PlaylistForm extends React.Component {
   render() {
 
     return (
-      <Segment>
-        <Form>
-          <List
-            selection
-            animated
-            divided
-            items = {this.state.options}
-            onItemClick = {this.state.isOwner ? this.addSong : this.sendSongRequestFromPlaylist}
-          />
-        </Form>
-      </Segment>
+      <div>
+        {this.state.options &&
+        <Segment>
+          <Form>
+            <List
+              selection
+              animated
+              divided
+              items = {this.state.options}
+              onItemClick = {this.state.isOwner ? this.addSong : this.sendSongRequestFromPlaylist}
+            />
+          </Form>
+        </Segment>
+        }
+      </div>
     )
 
   }
@@ -77,7 +84,8 @@ PlaylistForm.propTypes = {
   room_playlist_id: PropTypes.string.isRequired,
   room_owner_id: PropTypes.string.isRequired,
   isOwner: PropTypes.bool.isRequired,
-  sendSongRequest: PropTypes.func.isRequired
+  sendSongRequest: PropTypes.func.isRequired,
+  getTracks: PropTypes.func.isRequired
 };
 
 export default PlaylistForm;

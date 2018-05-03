@@ -1,4 +1,4 @@
-import { USER_LOGGED_IN, USER_LOGGED_OUT, SPOTIFY_USER_LOGGED_IN } from '../types';
+import { USER_LOGGED_IN, USER_LOGGED_OUT, SPOTIFY_USER_LOGGED_IN, SPOTIFY_TOKEN_REFRESHED } from '../types';
 import api from '../api';
 
 export const userLoggedIn = user => ({
@@ -17,6 +17,15 @@ export const spotifyUserLoggedIn = user => {
     user
   }
 };
+
+export const spotifyTokenRefreshed = token => {
+  api.spotifyApi.setAccessToken(token);
+  localStorage.spotifyAccessToken = token;
+  return {
+    type: SPOTIFY_TOKEN_REFRESHED,
+    token
+  }
+}
 
 export const login = credentials => dispatch =>
   api.user.login(credentials).then(user => {
@@ -37,8 +46,3 @@ export const confirm = token => dispatch =>
     localStorage.harmonizeJWT = user.token;
     dispatch(userLoggedIn(user));
   });
-
-export const refreshSpotifyToken = (token) => dispatch => {
-  localStorage.accessToken = token;
-  dispatch(spotifyTokenRefreshed(token));
-}
